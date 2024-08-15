@@ -1,0 +1,37 @@
+/** @format */
+
+.login-layout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100vw;
+  height: 100vh;
+
+  background-color: #23a9ff;
+  background-image: url('./assets/images/login-bg.png');
+  background-repeat: no-repeat;
+  background-position: bottom center;
+  background-size: contain;
+  .login-content {
+    width: 1300px;
+    height: 800px;
+    padding: 150px 40px 40px 800px;
+
+    background: url('./assets/images/login-form-bg.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+  }
+}
+
+.login-form-layout {
+  .login-form-header {
+    font-size: 24px;
+    line-height: 40px;
+
+    height: 40px;
+
+    text-align: center;
+  }
+}

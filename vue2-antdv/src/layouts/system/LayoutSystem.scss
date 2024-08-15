@@ -1,0 +1,39 @@
+/** @format */
+$header-height: 64px;
+
+.layout {
+  width: 100vw;
+  height: 100vh;
+  .aside {
+    .aside-header {
+      height: $header-height;
+    }
+    .aside-content {
+      overflow-y: auto;
+
+      height: calc(100vh - $header-height - 48px);
+    }
+  }
+  .content {
+    .content-header {
+      height: $header-height;
+    }
+    .content-content {
+      overflow-y: auto;
+
+      height: calc(100vh - $header-height);
+      .content-content-header {
+        overflow-y: hidden;
+
+        height: 40px;
+      }
+      .content-content-content {
+        overflow-y: auto;
+
+        height: calc(100vh - $header-height - 40px);
+
+        background-color: #666;
+      }
+    }
+  }
+}
