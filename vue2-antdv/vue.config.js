@@ -7,6 +7,7 @@ module.exports = defineConfig({
   transpileDependencies: true,
   publicPath: './',
   productionSourceMap: process.env.NODE_ENV === 'development',
+  pages: { index: { entry: 'src/main.ts', title: '驾驶舱项目Vue2+ant' } },
   css: {
     loaderOptions: {
       less: {

@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "react-antd"
+		},
+		{
+			"path": "vue2-antdv"
+		},
+		{
+			"path": "vue3-antdv"
+		}
+	]
+}
