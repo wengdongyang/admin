@@ -32,6 +32,7 @@ export default class LayoutLogin extends Vue {
   loginType = 'system';
 }
 </script>
-<style lang="scss" scoped>
-@import './LayoutLogin.scss';
-</style>
+<style lang="scss"
+       scoped>
+      @import './LayoutLogin.scss';
+    </style>

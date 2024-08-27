@@ -22,13 +22,15 @@
   </a-layout>
 </template>
 <script lang="ts">
+import { message } from 'ant-design-vue';
 import { Component, Vue } from 'vue-property-decorator';
 // apis
+import { apiGetGetRouters } from '@src/apis';
 // utils
 // types
 // mixins
 // stores
-import { useSystem } from '@src/store';
+import { useUserInfo, useSystem } from '@src/store';
 // configs
 // components
 @Component({ components: {} })
@@ -45,8 +47,38 @@ export default class LayoutSystem extends Vue {
       console.warn(error);
     }
   }
-  created() {}
-  mounted() {}
+  checkIsLogin() {
+    try {
+      const { isLogin } = useUserInfo();
+      if (!isLogin) {
+        this.$router.push({ path: '/' });
+      }
+    } catch (error) {
+      console.warn(error);
+    }
+  }
+
+  async getRouters() {
+    try {
+      const { setRouters } = useSystem();
+      const { code, data, msg } = await apiGetGetRouters();
+      if (code === 200) {
+        setRouters(data);
+      } else {
+        message.error(msg);
+      }
+    } catch (error) {
+      console.warn(error);
+    }
+  }
+  created() {
+    this.checkIsLogin();
+  }
+  mounted() {
+    this.$nextTick(() => {
+      this.getRouters();
+    });
+  }
 }
 </script>
 <style lang="scss" module>

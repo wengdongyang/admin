@@ -24,3 +24,8 @@ export const apiPostLoginTenant = (data: any) => {
 export const apiGetGetInfo = () => {
   return requestGet({ baseURL: ENV.BASE_URL, url: '/getInfo' });
 };
+
+// 获取用户信息
+export const apiGetGetRouters = () => {
+  return requestGet({ baseURL: ENV.BASE_URL, url: '/getRouters' });
+};

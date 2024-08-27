@@ -1,28 +1,26 @@
 /** @format */
+import { message } from 'ant-design-vue';
 import dayjs from 'dayjs';
 import lodash from 'lodash';
 import { defineStore } from 'pinia';
 // apis
+import { apiGetGetInfo } from '@src/apis';
 // utils
 // types
+import {
+  I_LOGIN_FORM_STATE,
+  I_STORE_LOGIN_FORM_STATE,
+  I_USER_TOKENS,
+  I_STORE_USER_INFO,
+  I_USER_INFO,
+  I_ROUTER,
+  I_ROUTER_TAB,
+  I_STORE_SYSTEM,
+} from './index.d';
 // mixins
 // stores
 // configs
 // components
-type I_LOGIN_FORM_STATE = Partial<{
-  username: string | null;
-  password: string | null;
-}>;
-
-type I_STORE_LOGIN_FORM_STATE = Partial<{
-  ADMIN_STORAGE_TIME: string;
-  ADMIN_IS_REMEMBER: boolean;
-  ADMIN_LOGIN_FORM_STATE: I_LOGIN_FORM_STATE;
-
-  TENANT_STORAGE_TIME: string;
-  TENANT_IS_REMEMBER: boolean;
-  TENANT_LOGIN_FORM_STATE: I_LOGIN_FORM_STATE;
-}>;
 
 export const useLoginFormState = defineStore('loginFormState', {
   state: (): I_STORE_LOGIN_FORM_STATE => {
@@ -112,23 +110,25 @@ export const useLoginFormState = defineStore('loginFormState', {
   persist: { storage: localStorage },
 });
 
-type I_USER_TOKENS = Partial<{
-  mgToken: string;
-  token: string;
-}>;
-type I_STORE_USER_INFO = Partial<{
-  USER_TOKENS: I_USER_TOKENS;
-}>;
-
 export const useUserInfo = defineStore('userinfo', {
   state: (): I_STORE_USER_INFO => {
     return {
       USER_TOKENS: {}, // userTokens
+      USER_INFO: {}, // 用户信息
+      USER_PERMISSIONS: [], // 用户权限
     };
   },
   getters: {
     token: (state: I_STORE_USER_INFO) => lodash.get(state, ['USER_TOKENS', 'token']) || '',
     mgToken: (state: I_STORE_USER_INFO) => lodash.get(state, ['USER_TOKENS', 'mgToken']) || '',
+
+    userInfo: (state: I_STORE_USER_INFO) => lodash.get(state, ['USER_INFO']) || {},
+    userPermissions: (state: I_STORE_USER_INFO) => lodash.get(state, ['USER_PERMISSIONS']) || {},
+
+    isLogin: (state: I_STORE_USER_INFO) => {
+      const userInfo = lodash.get(state, ['USER_INFO']) || {};
+      return userInfo && !lodash.isEmpty(userInfo);
+    },
   },
   actions: {
     setUserTokens(userTokens: I_USER_TOKENS) {
@@ -141,18 +141,17 @@ export const useUserInfo = defineStore('userinfo', {
         console.warn(error);
       }
     },
+    setUserInfoPermissions({ user, permissions }: { user: I_USER_INFO; permissions: string[] }) {
+      try {
+        this.USER_INFO = user;
+        this.USER_PERMISSIONS = permissions;
+      } catch (error) {
+        console.warn(error);
+      }
+    },
   },
   persist: { storage: sessionStorage },
 });
-
-type I_ROUTER = any;
-type I_ROUTER_TAB = any;
-type I_STORE_SYSTEM = Partial<{
-  COLLAPSED: boolean;
-  ROUTERS: I_ROUTER[];
-  ROUTER_TABS: I_ROUTER_TAB[];
-  ACTIVE_ROUTER_TAB: I_ROUTER_TAB;
-}>;
 
 export const useSystem = defineStore('system', {
   state: (): I_STORE_SYSTEM => {

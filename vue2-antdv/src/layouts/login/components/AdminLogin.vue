@@ -2,46 +2,23 @@
 <template>
   <a-form-model :class="$style['form']" ref="formRef" :model="formModel" :rules="formRules">
     <a-form-model-item :class="$style['form-item']" label="用户账号" prop="username">
-      <a-input
-        :class="[$style['input'], $style['username']]"
-        v-model="formModel.username"
-        placeholder="用户账号"
-        autocomplete="off"
-        size="large"
-        allowClear
-      />
+      <a-input :class="[$style['input'], $style['username']]" v-model="formModel.username" placeholder="用户账号"
+        autocomplete="off" size="large" allowClear />
     </a-form-model-item>
     <a-form-model-item :class="$style['form-item']" label="密码" prop="password">
-      <a-input-password
-        :class="[$style['input'], $style['password']]"
-        v-model="formModel.password"
-        placeholder="密码"
-        autocomplete="off"
-        size="large"
-        allowClear
-      />
+      <a-input-password :class="[$style['input'], $style['password']]" v-model="formModel.password" placeholder="密码"
+        autocomplete="off" size="large" allowClear />
     </a-form-model-item>
     <template v-if="captchaVisible">
       <a-form-model-item :class="$style['form-item']" label="验证码" prop="code">
         <a-row :gutter="12">
           <a-col :span="17">
-            <a-input
-              :class="[$style['input'], $style['code']]"
-              v-model="formModel.code"
-              placeholder="验证码"
-              autocomplete="off"
-              size="large"
-              allowClear
-            />
+            <a-input :class="[$style['input'], $style['code']]" v-model="formModel.code" placeholder="验证码"
+              autocomplete="off" size="large" allowClear />
           </a-col>
           <a-col :span="7">
-            <CaptchaImage
-              :class="$style['captcha-image']"
-              ref="captchaImageRef"
-              :uuid.sync="formModel.uuid"
-              @update:uuid="onUpdateUuid"
-              @captchaDisabled="() => (captchaVisible = false)"
-            />
+            <CaptchaImage :class="$style['captcha-image']" ref="captchaImageRef" :uuid.sync="formModel.uuid"
+              @update:uuid="onUpdateUuid" @captchaDisabled="() => (captchaVisible = false)" />
           </a-col>
         </a-row>
       </a-form-model-item>
@@ -58,7 +35,7 @@
 import { message } from 'ant-design-vue';
 import { Component, Vue } from 'vue-property-decorator';
 // apis
-import { apiPostLoginPlatform } from '@src/apis';
+import { apiGetGetInfo, apiPostLoginPlatform } from '@src/apis';
 // utils
 // types
 // mixins
@@ -116,6 +93,20 @@ export default class AdminLogin extends Vue {
     }
   }
 
+  async getUserInfos() {
+    try {
+      const { setUserInfoPermissions } = useUserInfo();
+      const { code, user, permissions, msg } = await apiGetGetInfo();
+      if (code === 200) {
+        setUserInfoPermissions({ user, permissions });
+      } else {
+        message.error(msg);
+      }
+    } catch (error) {
+      console.warn(error);
+    }
+  }
+
   async onClickLogin() {
     try {
       const { formModel, isRememberMe } = this;
@@ -130,14 +121,11 @@ export default class AdminLogin extends Vue {
         const res = await apiPostLoginPlatform(formModel);
         if (res.code === 200) {
           message.success(res.msg);
-
-          setUserTokens(res);
-
           sessionStorage.setItem(ENV.TOKEN_KEY, res.token);
           sessionStorage.setItem(ENV.MG_TOKEN_KEY, res.mgToken);
-
+          setUserTokens(res);
           setAdminLoginFormState(isRememberMe ? formModel : {});
-
+          this.getUserInfos();
           this.$router.push({ path: '/system' });
         } else {
           message.error(res.msg);
@@ -163,6 +151,7 @@ export default class AdminLogin extends Vue {
 <style lang="scss" module>
 .form {
   width: 400px;
+
   .form-item {
     .captcha-image {
       height: 40px;
