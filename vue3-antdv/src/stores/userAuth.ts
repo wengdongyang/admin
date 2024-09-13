@@ -122,7 +122,7 @@ export const useUserAuth = defineStore(
       }
     };
 
-    const setUserinfoPermissionsRoles = ({
+    const setUserInfoPermissionsRoles = ({
       roles,
       userinfo,
       permissions,
@@ -151,7 +151,7 @@ export const useUserAuth = defineStore(
       computedUserinfo,
       computedPermissions,
       setLoginToken,
-      setUserinfoPermissionsRoles,
+      setUserInfoPermissionsRoles,
     };
   },
   { persist: { storage: sessionStorage, paths: ['LOGIN_TOKEN', 'USERINFO', 'ROLES', 'PERMISSIONS'] } },

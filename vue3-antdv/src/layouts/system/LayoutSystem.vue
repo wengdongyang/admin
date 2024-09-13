@@ -1,11 +1,16 @@
 <!-- @format -->
 <template>
-  <a-layout :class="$style['system-layout']">
-    <a-layout-sider :class="$style['system-layout-sider']" collapsible>
-      <section :class="$style['sider-layout']">
-        <header :class="$style['sider-header']">LOGO</header>
-        <section :class="$style['sider-content']">
-          <a-menu :selectedKeys="selectedKeys" theme="dark">
+  <a-layout :class="$style['system-layout']" hasSider>
+    <a-layout-sider :class="$style['system-layout-aside']" v-model:collapsed="collapsed" collapsible>
+      <section :class="$style['aside-layout']">
+        <header :class="$style['aside-header']">
+          <img :class="$style['logo']" :src="ImageLogo" />
+          <p :class="$style['title']" v-show="!collapsed">
+            小镇在线管理系统
+          </p>
+        </header>
+        <section :class="$style['aside-content']">
+          <a-menu :class="$style['menu']" :selectedKeys="selectedKeys" theme="dark">
             <a-menu-item key="1">
               <span>nav 1</span>
             </a-menu-item>
@@ -46,6 +51,11 @@ import { ref } from 'vue';
 // stores
 // configs
 // components
+import ImageLogo from './assets/images/logo.png';
+
+const collapsed = ref(false);
+
+
 const selectedKeys = ref(['1']);
 
 const panes = ref([

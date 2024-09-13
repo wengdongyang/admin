@@ -5,7 +5,7 @@
       <a-input class="input" v-model:value="formState.username" placeholder="租户子用户账号" type="text" />
     </a-form-item>
     <a-form-item class="form-item" label="密码" name="password" :rules="[{ required: true }]">
-      <a-input class="input" v-model:value="formState.password" placeholder="密码" type="password" />
+      <a-input-password class="input" v-model:value="formState.password" placeholder="密码" type="password" />
     </a-form-item>
     <a-form-item class="form-item" label="验证码" name="code" :rules="[{ required: true }]">
       <a-row :gutter="12">
@@ -13,12 +13,8 @@
           <a-input class="input-code" v-model:value="formState.code" placeholder="验证码" />
         </a-col>
         <a-col :span="6">
-          <CaptchaImage
-            class="captcha-image"
-            :ref="(ref) => (captchaImageRef = ref)"
-            v-model:uuid="formState.uuid"
-            @updateCaptchaImage="onUpdateCaptchaImage"
-          />
+          <CaptchaImage class="captcha-image" :ref="(ref) => (captchaImageRef = ref)" v-model:uuid="formState.uuid"
+            @updateCaptchaImage="onUpdateCaptchaImage" />
         </a-col>
       </a-row>
     </a-form-item>
@@ -71,13 +67,13 @@ const initFormState = () => {
   }
 };
 
-const getUserinfoPermissionsRoles = async () => {
+const getUserInfoPermissionsRoles = async () => {
   try {
     const res = await apiGetGetInfo();
     const { code, msg } = res;
     if (code === 200) {
-      storeUserAuth.setUserinfoPermissionsRoles(res);
-      push({ path: '/system' });
+      storeUserAuth.setUserInfoPermissionsRoles(res);
+      push({ path: '/index' });
     } else {
       message.error(msg);
     }
@@ -110,7 +106,7 @@ const onFinish = async () => {
       storeLoginFormState.setSonTenantLoginFormState(innerIsRememberMe ? values : {});
       storeLoginFormState.setSonTenantIsRememberMe(innerIsRememberMe);
 
-      getUserinfoPermissionsRoles();
+      getUserInfoPermissionsRoles();
     } else {
       message.error(msg);
       captchaImageRef.value?.resetCaptchaImage();
