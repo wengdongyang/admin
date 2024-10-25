@@ -1,21 +1,18 @@
-/** @format */
-import { message } from 'ant-design-vue';
 import dayjs from 'dayjs';
 import lodash from 'lodash';
 import { defineStore } from 'pinia';
 // apis
-import { apiGetGetInfo } from '@src/apis';
 // utils
 // types
 import {
   I_LOGIN_FORM_STATE,
-  I_STORE_LOGIN_FORM_STATE,
-  I_USER_TOKENS,
-  I_STORE_USER_INFO,
-  I_USER_INFO,
   I_ROUTER,
   I_ROUTER_TAB,
+  I_STORE_LOGIN_FORM_STATE,
   I_STORE_SYSTEM,
+  I_STORE_USER_INFO,
+  I_USER_INFO,
+  I_USER_TOKENS,
 } from './index.d';
 // mixins
 // stores

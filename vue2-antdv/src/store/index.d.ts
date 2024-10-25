@@ -1,5 +1,3 @@
-/** @format */
-
 export type I_LOGIN_FORM_STATE = Partial<{
   username: string | null;
   password: string | null;

@@ -1,4 +1,3 @@
-/** @format */
 import 'minireset.css/minireset.css';
 
 import 'ant-design-vue/dist/antd.css';

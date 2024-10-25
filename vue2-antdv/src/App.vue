@@ -1,4 +1,3 @@
-<!-- @format -->
 <template>
   <section id="app">
     <a-config-provider :getPopupContainer="getPopupContainer" :locale="zh_CN">
@@ -31,5 +30,4 @@ export default {
   },
 };
 </script>
-<style lang="scss"
-       scoped></style>
+<style lang="scss" scoped></style>

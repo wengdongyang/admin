@@ -2,10 +2,12 @@
   "$schema": "https://json.schemastore.org/prettierrc",
   "semi": true,
   "tabWidth": 2,
-  "printWidth": 120,
   "singleQuote": true,
-  "insertPragma": true,
+  "printWidth": 120,
+  "insertPragma": false,
+  "trailingComma": "all",
   "jsxSingleQuote": true,
   "bracketSpacing": true,
-  "trailingComma": "all"
+  "bracketSameLine": false,
+  "singleAttributePerLine": false
 }

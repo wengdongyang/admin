@@ -1,4 +1,3 @@
-<!-- @format -->
 <template>
   <section class="login-layout">
     <section class="login-content">

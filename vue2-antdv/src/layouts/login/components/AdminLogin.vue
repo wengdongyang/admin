@@ -1,24 +1,46 @@
-<!-- @format -->
 <template>
   <a-form-model :class="$style['form']" ref="formRef" :model="formModel" :rules="formRules">
     <a-form-model-item :class="$style['form-item']" label="用户账号" prop="username">
-      <a-input :class="[$style['input'], $style['username']]" v-model="formModel.username" placeholder="用户账号"
-        autocomplete="off" size="large" allowClear />
+      <a-input
+        :class="[$style['input'], $style['username']]"
+        v-model="formModel.username"
+        size="large"
+        autocomplete="off"
+        placeholder="用户账号"
+        allowClear
+      />
     </a-form-model-item>
     <a-form-model-item :class="$style['form-item']" label="密码" prop="password">
-      <a-input-password :class="[$style['input'], $style['password']]" v-model="formModel.password" placeholder="密码"
-        autocomplete="off" size="large" allowClear />
+      <a-input-password
+        :class="[$style['input'], $style['password']]"
+        v-model="formModel.password"
+        size="large"
+        placeholder="密码"
+        autocomplete="off"
+        allowClear
+      />
     </a-form-model-item>
     <template v-if="captchaVisible">
       <a-form-model-item :class="$style['form-item']" label="验证码" prop="code">
         <a-row :gutter="12">
           <a-col :span="17">
-            <a-input :class="[$style['input'], $style['code']]" v-model="formModel.code" placeholder="验证码"
-              autocomplete="off" size="large" allowClear />
+            <a-input
+              :class="[$style['input'], $style['code']]"
+              v-model="formModel.code"
+              size="large"
+              autocomplete="off"
+              placeholder="验证码"
+              allowClear
+            />
           </a-col>
           <a-col :span="7">
-            <CaptchaImage :class="$style['captcha-image']" ref="captchaImageRef" :uuid.sync="formModel.uuid"
-              @update:uuid="onUpdateUuid" @captchaDisabled="() => (captchaVisible = false)" />
+            <CaptchaImage
+              :class="$style['captcha-image']"
+              ref="captchaImageRef"
+              :uuid.sync="formModel.uuid"
+              @update:uuid="onUpdateUuid"
+              @captchaDisabled="() => (captchaVisible = false)"
+            />
           </a-col>
         </a-row>
       </a-form-model-item>

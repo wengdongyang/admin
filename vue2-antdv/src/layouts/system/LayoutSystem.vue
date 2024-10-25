@@ -1,4 +1,3 @@
-<!-- @format -->
 <template>
   <a-layout :class="$style['layout']">
     <a-layout-sider :class="$style['aside']" :collapsed="collapsed" collapsible @collapse="onCollapse">

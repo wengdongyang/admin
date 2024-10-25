@@ -1,5 +1,3 @@
-/** @format */
-
 const { resolve } = require('path');
 const { defineConfig } = require('@vue/cli-service');
 // const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');

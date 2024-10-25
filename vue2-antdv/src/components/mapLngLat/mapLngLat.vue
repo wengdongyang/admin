@@ -1,4 +1,3 @@
-<!-- @format -->
 <template>
   <section class="map-lng-lat">
     <a-select
@@ -23,9 +22,9 @@
       v-else
       v-model="innerAddress"
       class="search"
-      placeholder="搜索地址"
-      enter-button="搜索"
       size="large"
+      enter-button="搜索"
+      placeholder="搜索地址"
       @search="onSearch"
     />
     <section class="map" ref="mapDom" id="mapDom" />

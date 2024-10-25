@@ -1,5 +1,3 @@
-<!-- @format -->
-
 <template>
   <img :class="$style['captcha-image']" :src="captchaImage" @click="getCaptchaImage" />
 </template>
