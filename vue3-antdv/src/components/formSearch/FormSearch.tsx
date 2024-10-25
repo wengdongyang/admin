@@ -2,18 +2,16 @@
 
 import styles from './FormSearch.less';
 
-import lodash from 'lodash';
+import * as lodash from 'lodash';
 import { get, set } from '@vueuse/core';
-import { message, Form, FormItem, Input, Select } from 'ant-design-vue';
-import { nextTick, onMounted, ref, reactive, defineComponent } from 'vue';
-import { useRouter } from 'vue-router';
+import { defineComponent, nextTick, onMounted, ref } from 'vue';
 // apis
 // hooks
 // utils
 // types
-import type { SlotsType } from 'vue';
 import type { FormInstance } from 'ant-design-vue';
-import type { IAdminFormItem, IFormState } from './FormSearch.d';
+import type { SlotsType } from 'vue';
+import type { IAdminFormItem, IField, IFormState, IValue } from './FormSearch.d';
 // stores
 // mixins
 // configs
@@ -23,7 +21,32 @@ const createDefaultValues = (formConfigs: IAdminFormItem[]): IFormState => {
   try {
     const defaultValues = {};
     formConfigs.forEach((formConfig) => {
-      lodash.set(defaultValues, formConfig.formItemProps.name, null);
+      switch (formConfig.component) {
+        case 'Input':
+        case 'InputNumber':
+          lodash.set(defaultValues, formConfig.field, formConfig.value || null);
+          break;
+        case 'Select':
+          lodash.set(defaultValues, formConfig.field, formConfig.value || null);
+          break;
+        case 'DatePicker':
+        case 'AutoComplete':
+        case 'Cascader':
+        case 'Checkbox':
+        case 'Radio':
+        case 'Switch':
+        case 'TimePicker':
+        case 'TreeSelect':
+        case 'Wangeditor':
+        case 'JsonEditor':
+        case 'UploadImg':
+        case 'UploadImgs':
+        case 'UploadFile':
+        case 'Custom':
+        default:
+          lodash.set(defaultValues, formConfig.field, formConfig.value || null);
+          break;
+      }
     });
 
     return defaultValues;
@@ -42,59 +65,62 @@ export default defineComponent(
     const formRef = ref<FormInstance>();
     const domRef = ref<HTMLDivElement>();
 
-    const { formConfigs = [], values = {}, initialValues = {} } = props;
-    const formState = ref<IFormState>({});
+    const { formConfigs = [] } = props;
+    const fieldsValues = ref<IFormState>({});
 
     const initFormState = () => {
       try {
-        if (values && !lodash.isEmpty(values)) {
-          const nextFormState = values;
-          formState.value = nextFormState;
-          emit('update:values', nextFormState);
-          return;
-        }
-        if (initialValues && !lodash.isEmpty(initialValues)) {
-          const nextFormState = initialValues;
-          formState.value = nextFormState;
-          emit('update:values', nextFormState);
-          return;
-        }
-        const nextFormState = createDefaultValues(formConfigs);
-        formState.value = nextFormState;
+        const nextFieldsValues = Object.assign({}, createDefaultValues(props.formConfigs), props.initialValues);
+        set(fieldsValues, nextFieldsValues);
+        emit('update:values', nextFieldsValues);
+      } catch (error) {
+        console.warn(error);
+      }
+    };
+
+    const getFieldsValues = () => {
+      try {
+        return get(fieldsValues);
+      } catch (error) {
+        console.warn(error);
+      }
+    };
+
+    const setFieldsValues = (nextFormState: IFormState) => {
+      try {
+        set(fieldsValues, nextFormState);
         emit('update:values', nextFormState);
       } catch (error) {
         console.warn(error);
       }
     };
 
-    const resetFields = () => {
+    const resetFieldsValues = () => {
       try {
-        if (initialValues && !lodash.isEmpty(initialValues)) {
-          const nextFormState = initialValues;
-          formState.value = nextFormState;
-          emit('update:values', nextFormState);
-          return;
-        }
-        const nextFormState = createDefaultValues(formConfigs);
-        formState.value = nextFormState;
-        emit('update:values', nextFormState);
+        const nextFieldsValues = Object.assign({}, createDefaultValues(props.formConfigs), props.initialValues);
+        set(fieldsValues, nextFieldsValues);
+        emit('update:values', nextFieldsValues);
       } catch (error) {
         console.warn(error);
       }
     };
-
-    const setFieldsValue = (values: IFormState) => {
+    const getFieldValue = (field: string) => {
       try {
-        if (values && !lodash.isEmpty(values)) {
-          const nextFormState = values;
-          formState.value = nextFormState;
-          emit('update:values', nextFormState);
-        }
+        return get(fieldsValues, field);
       } catch (error) {
         console.warn(error);
       }
     };
-
+    const setFieldValue = (field: IField, value: IValue) => {
+      try {
+        const prevFieldsValues = get(fieldsValues);
+        const nextFieldsValues = Object.assign({}, prevFieldsValues, { [field]: value });
+        set(fieldsValues, nextFieldsValues);
+        emit('update:values', nextFieldsValues);
+      } catch (error) {
+        console.warn(error);
+      }
+    };
     const validate = () => {};
 
     onMounted(async () => {
@@ -102,18 +128,18 @@ export default defineComponent(
       await initFormState();
     });
 
-    expose({ resetFields, setFieldsValue, validate });
+    expose({ getFieldsValues, setFieldsValues, resetFieldsValues, getFieldValue, setFieldValue, validate });
 
     const renderFormItemInput = (formConfig: IAdminFormItem) => {
-      const name = lodash.get(formConfig, ['formItemProps', 'name']);
+      const field = lodash.get(formConfig, 'field');
       return (
-        <a-form-item class={styles['form-item']} {...formConfig.formItemProps} name={name}>
+        <a-form-item class={styles['form-item']} {...formConfig.formItemProps} name={field}>
           <a-input
             class={styles['input']}
             {...formConfig.componentProps}
-            value={formState.value[name]}
+            value={getFieldValue(field)}
             onUpdate:value={(nextValue: any) => {
-              formState.value[name] = nextValue;
+              setFieldValue(field, nextValue);
             }}
             allowClear
           />
@@ -121,15 +147,15 @@ export default defineComponent(
       );
     };
     const renderFormItemInputNumber = (formConfig: IAdminFormItem) => {
-      const name = lodash.get(formConfig, ['formItemProps', 'name']);
+      const field = lodash.get(formConfig, 'field');
       return (
-        <a-form-item class={styles['form-item']} {...formConfig.formItemProps} name={name}>
+        <a-form-item class={styles['form-item']} {...formConfig.formItemProps} name={field}>
           <a-input-number
             class={styles['input-number']}
             {...formConfig.componentProps}
-            value={formState.value[name]}
+            value={getFieldValue(field)}
             onUpdate:value={(nextValue: any) => {
-              formState.value[name] = nextValue;
+              setFieldValue(field, nextValue);
             }}
             allowClear
           />
@@ -137,16 +163,16 @@ export default defineComponent(
       );
     };
     const renderFormItemSelect = (formConfig: IAdminFormItem) => {
-      const name = lodash.get(formConfig, ['formItemProps', 'name']);
+      const field = lodash.get(formConfig, 'field');
       return (
-        <a-form-item class={styles['form-item']} {...formConfig.formItemProps} name={name}>
+        <a-form-item class={styles['form-item']} {...formConfig.formItemProps} name={field}>
           <a-select
             class={styles['select']}
             {...formConfig.componentProps}
-            getPopupContainer={() => domRef.value}
-            value={formState.value[name]}
+            getPopupContainer={() => get(domRef)}
+            value={getFieldValue(field)}
             onUpdate:value={(nextValue: any) => {
-              formState.value[name] = nextValue;
+              setFieldValue(field, nextValue);
             }}
             allowClear
           />
@@ -155,18 +181,18 @@ export default defineComponent(
     };
 
     const renderFormItemDatePicker = (formConfig: IAdminFormItem) => {
-      const name = lodash.get(formConfig, ['formItemProps', 'name']);
+      const field = lodash.get(formConfig, 'field');
       const format = lodash.get(formConfig, ['componentProps', 'format']) || 'YYYY-MM-DD';
       const valueFormat = lodash.get(formConfig, ['componentProps', 'valueFormat']);
       return (
-        <a-form-item class={styles['form-item']} {...formConfig.formItemProps} name={name}>
+        <a-form-item class={styles['form-item']} {...formConfig.formItemProps} name={field}>
           <a-date-picker
             class={styles['date-picker']}
             {...formConfig.componentProps}
-            getPopupContainer={() => domRef.value}
-            value={formState.value[name]}
+            getPopupContainer={() => get(domRef)}
+            value={getFieldValue(field)}
             onUpdate:value={(nextValue: any) => {
-              formState.value[name] = nextValue;
+              setFieldValue(field, nextValue);
             }}
             format={format}
             valueFormat={valueFormat || format}
@@ -177,14 +203,14 @@ export default defineComponent(
     };
 
     const renderFormItemCustom = (formConfig: IAdminFormItem) => {
-      const name = lodash.get(formConfig, ['formItemProps', 'name']);
-      return slots?.renderFormItem({ formState: formState.value, name });
+      const field = lodash.get(formConfig, 'field');
+      return slots?.renderFormItem({ formState: get(fieldsValues), field });
     };
 
     return () => {
       return (
         <section class={styles['form-content']} ref={domRef}>
-          <a-form ref={formRef} class={styles['form']} layout={'inline'} model={formState.value}>
+          <a-form ref={formRef} class={styles['form']} layout={'inline'} model={fieldsValues.value}>
             {formConfigs?.map((formConfig: IAdminFormItem) => {
               switch (formConfig.component) {
                 case 'Input':
@@ -215,7 +241,7 @@ export default defineComponent(
   {
     name: 'AdminFormInline',
     emits: ['update:values'],
-    slots: Object as SlotsType<{ renderFormItem: { formState: IFormState; name: string } }>,
+    slots: Object as SlotsType<{ renderFormItem: { formState: IFormState; field: string } }>,
     props: {
       formConfigs: { type: Array, required: true, default: () => [] },
       values: { type: Object, required: true, default: () => {} },
