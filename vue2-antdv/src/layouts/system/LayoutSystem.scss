@@ -5,7 +5,32 @@ $header-height: 64px;
   height: 100vh;
   .aside {
     .aside-header {
+      display: flex;
+      overflow: hidden;
+      align-items: center;
+      justify-content: center;
+
+      height: 64px;
       height: $header-height;
+      padding: 0 10px;
+      .logo {
+        width: 32px;
+        height: 32px;
+
+        object-fit: contain;
+      }
+      .title {
+        font-size: 14px;
+        line-height: 32px;
+
+        overflow: hidden;
+
+        height: 32px;
+        margin-bottom: 0;
+        margin-left: 12px;
+
+        color: #fff;
+      }
     }
     .aside-content {
       overflow-y: auto;
@@ -16,6 +41,8 @@ $header-height: 64px;
   .content {
     .content-header {
       height: $header-height;
+
+      background-color: #fff;
     }
     .content-content {
       overflow-y: auto;
@@ -30,8 +57,9 @@ $header-height: 64px;
         overflow-y: auto;
 
         height: calc(100vh - $header-height - 40px);
+        padding: 20px;
 
-        background-color: #666;
+        background-color: #fff;
       }
     }
   }

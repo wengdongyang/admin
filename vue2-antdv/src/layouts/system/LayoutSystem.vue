@@ -1,11 +1,29 @@
 <template>
   <a-layout :class="$style['layout']">
     <a-layout-sider :class="$style['aside']" :collapsed="collapsed" collapsible @collapse="onCollapse">
-      <header :class="$style['aside-header']"></header>
+      <header :class="$style['aside-header']">
+        <img :class="$style['logo']" :src="require('./assets/images/logo.png')" />
+        <p :class="$style['title']" v-show="!collapsed" :style="{ width: `${title.length}em` }">
+          {{ title }}
+        </p>
+      </header>
       <section :class="$style['aside-content']"></section>
     </a-layout-sider>
     <a-layout :class="$style['content']">
-      <a-layout-header :class="$style['content-header']"> header </a-layout-header>
+      <a-layout-header :class="$style['content-header']">
+        <section></section>
+        <a-dropdown placement="bottomRight" arrow>
+          <a class="ant-dropdown-link" @click.prevent>
+            {{ userInfo.userName || userInfo.nickName }}
+          </a>
+          <template #overlay>
+            <a-menu>
+              <a-menu-item key="1">个人中心</a-menu-item>
+              <a-menu-item key="3">退出登录</a-menu-item>
+            </a-menu>
+          </template>
+        </a-dropdown>
+      </a-layout-header>
       <a-layout-content :class="$style['content-content']">
         <header :class="$style['content-content-header']">
           <a-tabs type="editable-card" size="small" hideAdd>
@@ -34,10 +52,18 @@ import { useUserInfo, useSystem } from '@src/store';
 // components
 @Component({ components: {} })
 export default class LayoutSystem extends Vue {
+  get title() {
+    return process.env.VUE_APP_TITLE;
+  }
   get collapsed() {
     const { collapsed } = useSystem();
     return collapsed;
   }
+  get userInfo() {
+    const { userInfo } = useUserInfo();
+    return userInfo;
+  }
+
   onCollapse(collapsed: boolean) {
     try {
       const { setCollapsed } = useSystem();

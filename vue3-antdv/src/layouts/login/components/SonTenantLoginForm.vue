@@ -72,7 +72,7 @@ const getUserInfoPermissionsRoles = async () => {
     const res = await apiGetGetInfo();
     const { code, msg } = res;
     if (code === 200) {
-      storeUserAuth.setUserInfoPermissionsRoles(res);
+      storeUserAuth.setUserInfoRolesPermissionsRoles(res);
       push({ path: '/index' });
     } else {
       message.error(msg);

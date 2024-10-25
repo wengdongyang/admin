@@ -112,6 +112,7 @@ export const useUserInfo = defineStore('userinfo', {
     return {
       USER_TOKENS: {}, // userTokens
       USER_INFO: {}, // 用户信息
+      USER_ROLES: [], // 用户信息
       USER_PERMISSIONS: [], // 用户权限
     };
   },
@@ -120,6 +121,7 @@ export const useUserInfo = defineStore('userinfo', {
     mgToken: (state: I_STORE_USER_INFO) => lodash.get(state, ['USER_TOKENS', 'mgToken']) || '',
 
     userInfo: (state: I_STORE_USER_INFO) => lodash.get(state, ['USER_INFO']) || {},
+    userRoles: (state: I_STORE_USER_INFO) => lodash.get(state, ['USER_ROLES']) || [],
     userPermissions: (state: I_STORE_USER_INFO) => lodash.get(state, ['USER_PERMISSIONS']) || {},
 
     isLogin: (state: I_STORE_USER_INFO) => {
@@ -138,9 +140,18 @@ export const useUserInfo = defineStore('userinfo', {
         console.warn(error);
       }
     },
-    setUserInfoPermissions({ user, permissions }: { user: I_USER_INFO; permissions: string[] }) {
+    setUserInfoRolesPermissions({
+      user,
+      roles,
+      permissions,
+    }: {
+      user: I_USER_INFO;
+      roles: string[];
+      permissions: string[];
+    }) {
       try {
         this.USER_INFO = user;
+        this.USER_ROLES = roles;
         this.USER_PERMISSIONS = permissions;
       } catch (error) {
         console.warn(error);

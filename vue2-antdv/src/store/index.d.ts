@@ -55,6 +55,7 @@ export type I_USER_INFO = Partial<{
 export type I_STORE_USER_INFO = Partial<{
   USER_TOKENS: I_USER_TOKENS;
   USER_INFO: I_USER_INFO;
+  USER_ROLES: string[];
   USER_PERMISSIONS: string[];
 }>;
 

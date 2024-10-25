@@ -27,9 +27,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import AdminLogin from './components/AdminLogin.vue';
 import TenantLogin from './components/TenantLogin.vue';
 @Component({ components: { AdminLogin, TenantLogin } })
-export default class LayoutLogin extends Vue {
-  loginType = 'system';
-}
+export default class LayoutLogin extends Vue {}
 </script>
 <style lang="scss" scoped>
 @import './LayoutLogin.scss';

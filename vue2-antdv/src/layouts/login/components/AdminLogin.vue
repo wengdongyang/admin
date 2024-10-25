@@ -74,7 +74,7 @@ export default class AdminLogin extends Vue {
 
   isRememberMe = false;
 
-  formModel = { username: null, password: null, code: null, uuid: null };
+  formModel = { username: 'admin', password: '91A38A321F5D098F82F2BC00C50E4320', code: '', uuid: '' };
 
   get formRules() {
     return {
@@ -87,7 +87,7 @@ export default class AdminLogin extends Vue {
   onUpdateUuid() {
     try {
       const { formModel } = this;
-      this.formModel = Object.assign({}, formModel, { code: null });
+      this.formModel = Object.assign({}, formModel, { code: '' });
     } catch (error) {
       console.warn(error);
     }
@@ -117,10 +117,10 @@ export default class AdminLogin extends Vue {
 
   async getUserInfos() {
     try {
-      const { setUserInfoPermissions } = useUserInfo();
-      const { code, user, permissions, msg } = await apiGetGetInfo();
+      const { setUserInfoRolesPermissions } = useUserInfo();
+      const { code, user, permissions, roles, regionNo, msg } = await apiGetGetInfo();
       if (code === 200) {
-        setUserInfoPermissions({ user, permissions });
+        setUserInfoRolesPermissions({ user: Object.assign({}, user, { regionNo }), roles, permissions });
       } else {
         message.error(msg);
       }
@@ -140,7 +140,8 @@ export default class AdminLogin extends Vue {
       const isOk = await formRef?.validate();
 
       if (isOk) {
-        const res = await apiPostLoginPlatform(formModel);
+        const { password = '' } = formModel;
+        const res = await apiPostLoginPlatform(Object.assign({}, formModel, { password }));
         if (res.code === 200) {
           message.success(res.msg);
           sessionStorage.setItem(ENV.TOKEN_KEY, res.token);
