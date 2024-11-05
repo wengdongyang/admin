@@ -14,7 +14,14 @@ import { useRouter } from 'vue-router';
 // stores
 // configs
 // components
-tryOnMounted(async () => { });
+
+// props
+// emits
+
+// refs
+// computed
+// methods
+// watch
 watch(
   () => [],
   (newValue) => { },
